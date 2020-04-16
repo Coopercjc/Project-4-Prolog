@@ -63,6 +63,11 @@ typeStatement(gvLet(Name, T, Code), unit):-
     bType(T), /* make sure we have an infered type */
     asserta(gvar(Name, T)). /* add definition to database */
 
+typeStatement(vLet(Name, T, Code), unit):-
+    atom(Name), /* make sure we have a bound name */
+    typeExp(Code, T), /* infer the type of Code and ensure it is T */
+    bType(T). /* make sure we have an infered type */
+
 /* if statements are encodes as:
     if(condition:Boolean, trueCode: [Statements], falseCode: [Statements])
 */
@@ -70,6 +75,16 @@ typeStatement(if(Cond, TrueB, FalseB), T) :-
     typeBoolExp(Cond),
     typeCode(TrueB, T),
     typeCode(FalseB, T).
+
+
+/* for statements are encoded as:
+    for( gvLet(v, T, int/float), condition: Boolean)
+
+*/
+typeStatement(for(Name, T, Code, Cond)) :-
+    typeBoolExp(Cond),
+    typeStatement(vLet(Name,T,Code), unit).
+
 
 /* Code is simply a list of statements. The type is 
     the type of the last statement 

@@ -46,4 +46,8 @@ test(simple_if, [nondet]) :-
     assertion(T==int).
 
 
+test(simple_for, [nondet]) :-
+    typeStatement( for(v, T, int, 3 < 4) ), 
+    assertion(T==int).
+
 :-end_tests(typeInf).
