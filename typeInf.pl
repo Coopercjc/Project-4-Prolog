@@ -38,11 +38,38 @@ hasComparison(string).
 
 hasAdd(int).
 hasAdd(float).
+hasSub(int).
+hasSub(float).
+hasMult(int).
+hasMult(float).
+hasDiv(float).
+hasDiv(int).
+
 
 /* predicate to infer types for boolean expressions */
 typeBoolExp(true).
-typeBoolExp(false). 
+typeBoolExp(false).
+
+%Less Than 
 typeBoolExp( X < Y) :- 
+    typeExp(X, T),
+    typeExp(Y, T),
+    hasComparison(T).
+
+%Less Than/Equal
+typeBoolExp( X =< Y) :- 
+    typeExp(X, T),
+    typeExp(Y, T),
+    hasComparison(T).
+
+%Greater Than 
+typeBoolExp( X > Y) :- 
+    typeExp(X, T),
+    typeExp(Y, T),
+    hasComparison(T).
+
+%Greater Than/Equal
+typeBoolExp( X >= Y) :- 
     typeExp(X, T),
     typeExp(Y, T),
     hasComparison(T).
@@ -63,10 +90,26 @@ typeStatement(gvLet(Name, T, Code), unit):-
     bType(T), /* make sure we have an infered type */
     asserta(gvar(Name, T)). /* add definition to database */
 
-typeStatement(vLet(Name, T, Code), unit):-
+
+/*
+    Local variable attempt
+*/
+typeStatement(lvLet(Name, T, Code, List), X):-
     atom(Name), /* make sure we have a bound name */
     typeExp(Code, T), /* infer the type of Code and ensure it is T */
-    bType(T). /* make sure we have an infered type */
+    bType(T),/* make sure we have an infered type */
+    asserta(gvar(Name, T)),
+    is_list(List),
+    typeCode(List, X). 
+
+/*
+    FuncLet
+*/
+typeStatement(funcLet(Name, Signature, Body), unit):-
+    atom(Name),
+    typeExp(Body, Signature),
+    bType(Signature),
+    asserta(gvar(Name, Signature)).
 
 /* if statements are encodes as:
     if(condition:Boolean, trueCode: [Statements], falseCode: [Statements])
@@ -78,13 +121,17 @@ typeStatement(if(Cond, TrueB, FalseB), T) :-
 
 
 /* for statements are encoded as:
-    for( gvLet(v, T, int/float), condition: Boolean)
+    for( vLet(v, T, int/float), condition: Boolean)
 
 */
-typeStatement(for(Name, T, Code, Cond)) :-
+typeStatement(for(Name, T, Code, Cond, List), X) :-
     typeBoolExp(Cond),
-    typeStatement(vLet(Name,T,Code), unit).
+    typeStatement(lvLet(Name,T,Code,List), X).
 
+/* Block */
+block(Body, T):-
+    is_list(Body),
+    typeCode(Body, T).
 
 /* Code is simply a list of statements. The type is 
     the type of the last statement 
@@ -148,8 +195,25 @@ iplus :: int -> int -> int
 */
 
 fType(iplus, [int,int,int]).
+fType(isubt, [int,int,int]).
+fType(imult, [int,int,int]).
+fType(idiv, [int,int,int]).
+fType(iexp, [int,int,int]).
+fType(writeln, [string, string]).
 fType((+), [T, T, T]) :- hasAdd(T).
+fType((-), [T, T, T]) :- hasSub(T).
+fType((*), [T, T, T]) :- hasMult(T).
+fType((/), [T, T, T]) :- hasDiv(T).
+fType((>), [T, T, bool]).
+fType((<), [T, T, bool]).
+fType((>=), [T, T, bool]).
+fType((=<), [T, T, bool]).
+fType((==), [T, T, bool]).
 fType(fplus, [float, float, float]).
+fType(fsubt, [float, float, float]).
+fType(fmult, [float, float, float]).
+fType(fdiv, [float, float, float]).
+fType(fexp, [float, float, float]).
 fType(fToInt, [float,int]).
 fType(iToFloat, [int,float]).
 fType(print, [_X, unit]). /* simple print */

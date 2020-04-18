@@ -12,12 +12,76 @@
 test(typeExp_iplus) :- 
     typeExp(iplus(int,int), int).
 
+/*
+    ALL OF THE FOLLOWING TESTS ARE TO CHECK THE STRUCTURE OF BASIC ARITHMETIC OPERATIONS
+*/
+
+%   ADDITION
 % this test should fail
 test(typeExp_iplus_F, [fail]) :-
     typeExp(iplus(int, int), float).
 
 test(typeExp_iplus_T, [true(T == int)]) :-
     typeExp(iplus(int, int), T).
+
+% this test should fail
+test(typeExp_fplus_F, [fail]) :-
+    typeExp(fplus(float, float), int).
+
+test(typeExp_fplus_T, [true(T == float)]) :-
+    typeExp(fplus(float, float), T).
+
+%   SUBTRACTION
+% this test should fail
+test(typeExp_iSUBT_F, [fail]) :-
+    typeExp(isubt(int, int), float).
+
+test(typeExp_iSUBT_T, [true(T == int)]) :-
+    typeExp(isubt(int, int), T).
+
+% this test should fail
+test(typeExp_fSUBT_F, [fail]) :-
+    typeExp(fsubt(float, float), int).
+
+test(typeExp_fSUBT_T, [true(T == float)]) :-
+    typeExp(fsubt(float, float), T).
+
+%   MULTIPLICATION
+% this test should fail
+test(typeExp_iMULT_F, [fail]) :-
+    typeExp(imult(int, int), float).
+
+test(typeExp_iMULT_T, [true(T == int)]) :-
+    typeExp(imult(int, int), T).
+
+% this test should fail
+test(typeExp_fMULT_F, [fail]) :-
+    typeExp(fmult(float, float), int).
+
+test(typeExp_fMULT_T, [true(T == float)]) :-
+    typeExp(fmult(float, float), T).
+
+%   DIVISION
+% this test should fail
+test(typeExp_iDIV_F, [fail]) :-
+    typeExp(idiv(int, int), float).
+
+test(typeExp_iDIV_T, [true(T == int)]) :-
+    typeExp(idiv(int, int), T).
+
+% this test should fail
+test(typeExp_fDIV_F, [fail]) :-
+    typeExp(fdiv(float, float), int).
+
+test(typeExp_fDIV_T, [true(T == float)]) :-
+    typeExp(fdiv(float, float), T).
+
+/*test(typeExp_AllTypes) :-
+    functor(a + b, int, int),
+    functor(a - b, int, int),
+    functor(a +- b, int, int),
+    functor(a + b, int, int).
+*/
 
 % NOTE: use nondet as option to test if the test is nondeterministic
 
@@ -47,7 +111,85 @@ test(simple_if, [nondet]) :-
 
 
 test(simple_for, [nondet]) :-
-    typeStatement( for(v, T, int, 3 < 4) ), 
+    typeStatement( for(v, T, int, 3 < 4, [typeStatement( if(3 =< 4, [3], [4]), T)]),_ ), 
     assertion(T==int).
+
+test(bool_expressions, [nondet] ) :-
+    typeStatement( if(3.0 < 4.0, [3], [4]), T),
+    typeStatement( if(3 =< 4, [3], [4]), T),
+    typeStatement( if(3 > 4, [3], [4]), T),
+    typeStatement( if(3 >= 4, [3], [4]), T),
+    typeStatement( if(3 == 4, [3], [4]), T),
+    assertion(T==int).
+
+
+%expressions as statements
+test(exprStat, [nondet]) :-
+    infer([
+        int,
+        float,
+        bool
+        ], Ret),
+        assertion(Ret==bool).
+
+%test if statements
+test(ifStat, [nondet]) :-
+    infer([
+        if(>(float,float), [iplus(int,int)], [isubt(int,int)])
+        ], Ret),
+        assertion(Ret==int).
+
+%test nested let in statements
+test(letIn, [nondet]) :-
+    deleteGVars(),
+    infer([
+        lvLet(x, int, iplus(int,int), [
+            lvLet(y, float, fplus(float,float), [
+                lvLet(z, bool, <(float,float), [
+                    getVar(x,X),
+                    getVar(y,Y),
+                    getVar(z,Z)
+                ])
+            ])
+        ])
+        
+        ], unit),
+
+        assertion(X==int),
+        assertion(Y==float),
+        assertion(Z==bool).
+
+%global variables from local scope
+test(letInGlobal, [nondet]) :-
+    deleteGVars(),
+    infer([
+        gvLet(v, float, fsubt(float,float)),
+        lvLet(x, float, fsubt(float,float), [
+            lvLet(y, int, itimes(int,int), [
+                lvLet(z, bool, ==(float,float), [
+                    getVar(x,X),
+                    getVar(y,Y),
+                    getVar(z,Z),
+                    getVar(v,V)
+                ])
+            ])
+        ])
+        
+        ], unit),
+
+        assertion(X==float),
+        assertion(Y==int),
+        assertion(Z==bool),
+        assertion(V==float).
+
+%test definining and calling a function
+test(functionDefCall, [nondet]) :-
+    infer([
+        funcLet(runTest, [string, int, bool], [<(float, float)]),
+        typeExp(runTest(X,Y))
+        ], Ret),
+        assertion(X==string),
+        assertion(Y==int),
+        assertion(Ret==bool).
 
 :-end_tests(typeInf).
