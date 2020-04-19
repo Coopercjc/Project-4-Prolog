@@ -111,15 +111,16 @@ test(simple_if, [nondet]) :-
 
 
 test(simple_for, [nondet]) :-
-    typeStatement( for(v, T, int, 3 < 4, [typeStatement( if(3 =< 4, [3], [4]), T)]),_ ), 
-    assertion(T==int).
+    typeStatement(for(v, T, 13, [if(3 =< 4, [3.0], [4.0])])), 
+    assertion(T==float).
+
 
 test(bool_expressions, [nondet] ) :-
-    typeStatement( if(3.0 < 4.0, [3], [4]), T),
+    typeStatement( if(1.0 < 1.0, [1], [2]), T),
     typeStatement( if(3 =< 4, [3], [4]), T),
-    typeStatement( if(3 > 4, [3], [4]), T),
-    typeStatement( if(3 >= 4, [3], [4]), T),
-    typeStatement( if(3 == 4, [3], [4]), T),
+    typeStatement( if(5 > 6, [5], [6]), T),
+    typeStatement( if(7 >= 8, [7], [8]), T),
+    typeStatement( if(==(9, 10), [9], [10]), T),
     assertion(T==int).
 
 
