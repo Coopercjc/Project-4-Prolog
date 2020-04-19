@@ -76,12 +76,6 @@ test(typeExp_fDIV_F, [fail]) :-
 test(typeExp_fDIV_T, [true(T == float)]) :-
     typeExp(fdiv(float, float), T).
 
-/*test(typeExp_AllTypes) :-
-    functor(a + b, int, int),
-    functor(a - b, int, int),
-    functor(a +- b, int, int),
-    functor(a + b, int, int).
-*/
 
 % NOTE: use nondet as option to test if the test is nondeterministic
 
@@ -182,15 +176,5 @@ test(letInGlobal, [nondet]) :-
         assertion(Y==int),
         assertion(Z==bool),
         assertion(V==float).
-
-%test definining and calling a function
-test(functionDefCall, [nondet]) :-
-    infer([
-        funcLet(runTest, [string, int, bool], [<(float, float)]),
-        typeExp(runTest(X,Y))
-        ], Ret),
-        assertion(X==string),
-        assertion(Y==int),
-        assertion(Ret==bool).
 
 :-end_tests(typeInf).

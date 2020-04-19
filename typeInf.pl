@@ -96,16 +96,6 @@ typeStatement(gvLet(Name, T, Code), unit):-
     bType(T), /* make sure we have an infered type */
     asserta(gvar(Name, T)). /* add definition to database */
 
-typeStatement(funcLet(Name, Signature, Body), unit):-
-    atom(Name),
-    typeExp(Body, Signature),
-    bType(Signature),
-    asserta(gvar(Name, Signature)).
-
-
-
-
-
 /* if statements are encodes as:
     if(condition:Boolean, trueCode: [Statements], falseCode: [Statements])
 */
@@ -130,11 +120,6 @@ typeStatement(lvLet(Name, T, Code)):-
     typeCode(Code, T), /* infer the type of Code and ensure it is T */
     bType(T),/* make sure we have an infered type */
     true. 
-
-/*
-    FuncLet
-*/
-
 
 /* Block */
 block(Body, T):-
