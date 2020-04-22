@@ -105,8 +105,8 @@ test(simple_if, [nondet]) :-
 
 
 test(simple_for, [nondet]) :-
-    typeStatement(for(v, T, 13, [if(3 =< 4, [3.0], [4.0])])), 
-    assertion(T==float).
+    typeStatement(for(v, T, 13, [if(3 =< 4, [3.0], [4.0]), if(3 =< 4, [3], [4])])), 
+    assertion(T==int).
 
 
 test(bool_expressions, [nondet] ) :-
@@ -118,6 +118,12 @@ test(bool_expressions, [nondet] ) :-
     assertion(T==int).
 
 
+/*test(code_block, [nondet]) :-
+    typeCode([if(1 =< 2, [1.0], [2.0]), if(3 =< 4, [3], [4]), if(==(9, 13), 26>13, 39>26)], T),
+    assertion(T==bool).
+
+
+*/
 %expressions as statements
 test(exprStat, [nondet]) :-
     infer([

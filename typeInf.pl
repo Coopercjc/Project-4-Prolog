@@ -122,9 +122,9 @@ typeStatement(lvLet(Name, T, Code)):-
     true. 
 
 /* Block */
-block(Body, T):-
-    is_list(Body),
-    typeCode(Body, T).
+block(List, T):-
+    is_list(List),
+    typeCode(List, T).
 
 /* Code is simply a list of statements. The type is 
     the type of the last statement 
