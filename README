@@ -1,3 +1,33 @@
+To run my code, follow the instructions in the README below. 
+
+
+I loaded the docs with 
+
+['d:\\School\\Coding\\COP4020\\Project-4-Prolog\\typeInf\\typeInf.pl'].
+
+and 
+
+['d:\\School\\Coding\\COP4020\\Project-4-Prolog\\typeInf\\typeInf.plt'].
+
+then I ran the line
+
+run_tests.
+
+
+In order for me to get this project to work, I put the SWIPL inside of this project to I 
+could just access the .exe very easily as PATH was not working when I tried to download
+SWIPL. I tested all of the predicates that I made and I also used the tests that were sent 
+out by Marco Pagani and passed them all.
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 Introduction
 ============
 

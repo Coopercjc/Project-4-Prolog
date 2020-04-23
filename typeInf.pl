@@ -1,5 +1,6 @@
 :- dynamic gvar/2.
 
+%written by Professor Dobra
 typeExp(X, int) :-
     integer(X).
 
@@ -36,6 +37,8 @@ hasComparison(int).
 hasComparison(float).
 hasComparison(string).
 
+
+%Used to say if these types have these functions.
 hasAdd(int).
 hasAdd(float).
 hasSub(int).
@@ -83,6 +86,7 @@ typeBoolExp( X == Y) :-
 
 
 /* TODO: add statements types and their type checking */
+%Used to get the variable type within tests and Infer.
 typeStatement(getVar(Name, T), unit) :-
     gvar(Name,T).
 
@@ -119,8 +123,7 @@ typeStatement(lvLet(Name, T, Code, Env), unit):-
     retract(gvar(Name, T)).
 
 /* for statements are encoded as:
-    for( lvLet(v, T, List), condition: Boolean)
-
+    for( Name: string, Condition: Integer, List: [Statements])
 */
 typeStatement(for(Name, T, Cond, List)) :-
     integer(Cond),
