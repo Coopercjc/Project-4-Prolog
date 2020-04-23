@@ -105,7 +105,7 @@ test(simple_if, [nondet]) :-
 
 
 test(simple_for, [nondet]) :-
-    typeStatement(for(v, T, 13, [if(3 =< 4, [3.0], [4.0]), if(3 =< 4, [3], [4])])), 
+    typeStatement(for(v, T, 13, [(if(3 =< 4, [3.0], [4.0])), (if(3 =< 4, [3], [4]))])), 
     assertion(T==int).
 
 
@@ -166,7 +166,7 @@ test(letInGlobal, [nondet]) :-
     infer([
         gvLet(v, float, fsubt(float,float)),
         lvLet(x, float, fsubt(float,float), [
-            lvLet(y, int, itimes(int,int), [
+            lvLet(y, int, imult(int,int), [
                 lvLet(z, bool, ==(float,float), [
                     getVar(x,X),
                     getVar(y,Y),

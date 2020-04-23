@@ -81,7 +81,10 @@ typeBoolExp( X == Y) :-
     hasComparison(T).
 
 
+
 /* TODO: add statements types and their type checking */
+typeStatement(getVar(Name, T), unit) :-
+    gvar(Name,T).
 
 typeStatement(X, T) :-
     typeExp(X, T).
@@ -104,22 +107,27 @@ typeStatement(if(Cond, TrueB, FalseB), T) :-
     typeCode(TrueB, T),
     typeCode(FalseB, T).
 
+/*
+    Local variable attempt
+*/
+typeStatement(lvLet(Name, T, Code, Env), unit):-
+    atom(Name), /* make sure we have a bound name */
+    typeExp(Code, T), /* infer the type of Code and ensure it is T */
+    bType(T), /* make sure we have an infered type */
+    asserta(gvar(Name, T)), /* add definition to database */
+    typeCode(Env, unit),
+    retract(gvar(Name, T)).
+
 /* for statements are encoded as:
     for( lvLet(v, T, List), condition: Boolean)
 
 */
 typeStatement(for(Name, T, Cond, List)) :-
     integer(Cond),
-    typeStatement(lvLet(Name,T,List)).
-
-/*
-    Local variable attempt
-*/
-typeStatement(lvLet(Name, T, Code)):-
     atom(Name), /* make sure we have a bound name */
-    typeCode(Code, T), /* infer the type of Code and ensure it is T */
-    bType(T),/* make sure we have an infered type */
-    true. 
+    asserta(gvar(Name, T)), /* add definition to database */
+    typeCode(List, T),
+    retract(gvar(Name, T)).
 
 /* Block */
 block(List, T):-

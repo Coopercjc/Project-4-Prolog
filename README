@@ -35,7 +35,7 @@ a more complete coverage of OCAml OR Haskell type inference. Specifically:
         last expression is an implicit return. return statement also possible
     [x]c. expression computation (as a statement)
     [x]d. if statements
-    [ ]e. "let in" statement for local variables
+    [x]e. "let in" statement for local variables
     [x]f. "for" statements in OCaml OR "where" statements in Haskell
     [ ]g. code blocks (sets of statements that can be run together and return the type of the last statement)
 3. Write tests for all predicates especially infer (at least 20 cases).
