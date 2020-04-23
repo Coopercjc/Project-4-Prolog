@@ -11,11 +11,9 @@
 % tests for typeExp
 test(typeExp_iplus) :- 
     typeExp(iplus(int,int), int).
-
 /*
     ALL OF THE FOLLOWING TESTS ARE TO CHECK THE STRUCTURE OF BASIC ARITHMETIC OPERATIONS
 */
-
 %   ADDITION
 % this test should fail
 test(typeExp_iplus_F, [fail]) :-
@@ -99,16 +97,17 @@ test(mockedFct, [nondet]) :-
     typeExp(my_fct(X), T), % infer type of expression using or function
     assertion(X==int), assertion(T==float). % make sure the types infered are correct
 
+%Test for If
 test(simple_if, [nondet]) :-
     typeStatement( if(true, [3], [4]), T),
     assertion(T==int).
 
-
+%Tesdt for For
 test(simple_for, [nondet]) :-
     typeStatement(for(v, T, 13, [(if(3 =< 4, [3.0], [4.0])), (if(3 =< 4, [3], [4]))])), 
     assertion(T==int).
 
-
+%bool Expressions
 test(bool_expressions, [nondet] ) :-
     typeStatement( if(1.0 < 1.0, [1], [2]), T),
     typeStatement( if(3 =< 4, [3], [4]), T),
@@ -117,13 +116,12 @@ test(bool_expressions, [nondet] ) :-
     typeStatement( if(==(9, 10), [9], [10]), T),
     assertion(T==int).
 
-
-/*test(code_block, [nondet]) :-
-    typeCode([if(1 =< 2, [1.0], [2.0]), if(3 =< 4, [3], [4]), if(==(9, 13), 26>13, 39>26)], T),
+%code blocks
+test(code_block, [nondet]) :-
+    typeCode([if(1 =< 2, [1.0], [2.0]), if(3 =< 4, [3], [4]), if(==(9, 13), [26>13], [39>26])], T),
     assertion(T==bool).
 
 
-*/
 %expressions as statements
 test(exprStat, [nondet]) :-
     infer([
