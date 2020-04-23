@@ -37,7 +37,7 @@ a more complete coverage of OCAml OR Haskell type inference. Specifically:
     [x]d. if statements
     [x]e. "let in" statement for local variables
     [x]f. "for" statements in OCaml OR "where" statements in Haskell
-    [ ]g. code blocks (sets of statements that can be run together and return the type of the last statement)
+    [x]g. code blocks (sets of statements that can be run together and return the type of the last statement)
 3. Write tests for all predicates especially infer (at least 20 cases).
 
 You need to find your own representation of OCaml/Haskell code to implement the 
